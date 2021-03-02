@@ -29,7 +29,9 @@ export default {
         rating: 4,
         roast: 8
       }
-    }
+    },
+    sort: 'asc',
+    sortBy: 'desc'
   },
   mutations: {
     save: (state, payload) => {
@@ -42,15 +44,11 @@ export default {
     }
   },
   getters: {
-    list: state => Object.keys(state.data).map(i => state.data[i]),
-    byRating: (state, getters) => payload => getters.list.sort((a, b) => {
-      if (a.rating > b.rating) return payload == 'desc' ? 1 : -1
-      if (a.rating < b.rating) return payload == 'desc' ? -1 : 1
-      return 0
-    }),
-    byRoast: (state, getters) => payload => getters.list.sort((a, b) => {
-      if (a.roast > b.roast) return payload == 'desc' ? 1 : -1
-      if (a.roast < b.roast) return payload == 'desc' ? -1 : 1
+    list: state => Object.keys(state),
+    set: (state, getters) => getters.list.map(i => state.data[i]),
+    sorted: (state, getters) => getters.set.slice().sort((a, b) => {
+      if (a[state.sortBy] > b[state.sortBy]) return state.sort == 'desc' ? 1 : -1
+      if (a[state.sortBy] < b[state.sortBy]) return state.sort == 'desc' ? -1 : 1
       return 0
     }),
   },
